@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لعبة أسئلة</title>
+<style>
+body {
+    font-family: Arial;
+    direction: rtl;
+    text-align: center;
+    background: #f0f0f0;
+}
+
+.container {
+    background: white;
+    width: 60%;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+button {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.correct {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.wrong {
+    background-color: #f44336;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2 id="question">السؤال هنا</h2>
+    <div id="answers"></div>
+    <p id="result"></p>
+    <button onclick="nextQuestion()">السؤال التالي</button>
+</div>
+
+<script>
+const questions = [
+    {
+        q: "ما عاصمة مصر؟",
+        answers: ["القاهرة", "الإسكندرية", "أسوان", "الأقصر"],
+        correct: 0
+    },
+    {
+        q: "كم عدد كواكب المجموعة الشمسية؟",
+        answers: ["7", "8", "9", "10"],
+        correct: 1
+    },
+    {
+        q: "من هو مخترع الهاتف؟",
+        answers: ["نيوتن", "أينشتاين", "غراهام بيل", "إديسون"],
+        correct: 2
+    },
+    {
+        q: "ما لون السماء؟",
+        answers: ["أحمر", "أزرق", "أخضر", "أسود"],
+        correct: 1
+    },
+    {
+        q: "كم عدد أيام الأسبوع؟",
+        answers: ["5", "6", "7", "8"],
+        correct: 2
+    },
+    {
+        q: "ما أسرع حيوان بري؟",
+        answers: ["الأسد", "الفهد", "الحصان", "النمر"],
+        correct: 1
+    },
+    {
+        q: "كم عدد حروف اللغة العربية؟",
+        answers: ["26", "28", "30", "24"],
+        correct: 1
+    }
+];
+
+let current = 0;
+let correctCount = 0;
+let wrongCount = 0;
+
+function loadQuestion() {
+    document.getElementById("result").innerText = "";
+    const q = questions[current];
+    document.getElementById("question").innerText = q.q;
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    q.answers.forEach((ans, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = ans;
+        btn.onclick = () => checkAnswer(index, btn);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(index, btn) {
+    const correct = questions[current].correct;
+
+    if (index === correct) {
+        btn.classList.add("correct");
+        document.getElementById("result").innerText = "✔️ صح";
+        correctCount++;
+    } else {
+        btn.classList.add("wrong");
+        document.getElementById("result").innerText = "❌ خطأ";
+        wrongCount++;
+    }
+
+    // تعطيل الأزرار بعد الاختيار
+    document.querySelectorAll("#answers button").forEach(b => {
+        b.disabled = true;
+    });
+}
+
+function nextQuestion() {
+    current++;
+
+    if (current < questions.length) {
+        loadQuestion();
+    } else {
+        document.querySelector(".container").innerHTML = `
+            <h2>انتهت اللعبة 🎉</h2>
+            <p>عدد الإجابات الصحيحة: ${correctCount}</p>
+            <p>عدد الإجابات الخاطئة: ${wrongCount}</p>
+        `;
+    }
+}
+
+// بدء اللعبة
+loadQuestion();
+</script>
+
+</body>
+</html>
